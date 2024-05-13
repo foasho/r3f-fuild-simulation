@@ -3,9 +3,10 @@ import vertexShader from "../glsl/fluid.vert";
 import fragmentShader from "../glsl/fluid.frag";
 import { ShaderMaterial, Vector2 } from "three";
 import { useFrame } from "@react-three/fiber";
+import { calcForce } from "../utils/force";
 
 const current_pointer = new Vector2();
-const velocity = new Vector2();
+const diff = new Vector2();
 export const FluidShader = () => {
 
   const ref = useRef<ShaderMaterial>(null);
@@ -27,10 +28,11 @@ export const FluidShader = () => {
       return;
     }
     // pointerの差分をとってvelocityにする
-    const velocity = pointer.clone().sub(current_pointer);
+    const _diff = pointer.clone().sub(current_pointer);
     shaderMaterial.uniforms.uProgress.value = Math.sin(clock.elapsedTime);
     shaderMaterial.uniforms.pointer.value = pointer;
-    shaderMaterial.uniforms.velocity.value = velocity;
+    const force = calcForce(_diff);
+    shaderMaterial.uniforms.force.value = force;
     current_pointer.copy(pointer);
   });
 
