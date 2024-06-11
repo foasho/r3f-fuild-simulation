@@ -79,8 +79,11 @@ vec4 getViscous(sampler2D velocity_new, vec2 uv){
 
 void main(){
   vec2 uv = vUv;
-  // Pointerの中心ほど
+  // [外力項] Pointerの中心ほど強くなる円形
   vec4 externalForce = getExternalForce(uv);
+  // [移流項]
+  vec4 advection = getAdvection(uv);
   // gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-  gl_FragColor = externalForce;
+  // gl_FragColor = externalForce;
+  gl_FragColor = advection;
 }
